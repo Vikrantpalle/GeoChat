@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.signup {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 50%;
+}
+
+.signup .item {
+  padding: var(--padding-unit);
+  margin: var(--margin-unit);
+}
+
+.signup .submit {
+  padding: var(--padding-unit);
+  margin: var(--margin-unit);
+}

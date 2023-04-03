@@ -1,0 +1,108 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* === SEARCH BAR === */
+
+.search {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 20em;
+  margin: var(--margin-unit) auto;
+}
+
+.search .input {
+  padding: var(--padding-unit);
+  width: 100%;
+  height: 40px;
+}
+
+.search .suggestions {
+  position: absolute;
+  top: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: rgb(166, 156, 156);
+  border-radius: 0% 0% 1% 1%;
+}
+
+.search .suggestions .item {
+  font-size: var(--global-font-size);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: var(--padding-unit);
+}
+
+.search .suggestions .item:hover {
+  background-color: #d3d3d3;
+  cursor: pointer;
+}
+
+/* === LOGO === */
+
+.logo {
+  font-size: calc(var(--global-font-size) * 2);
+  padding: var(--padding-unit);
+}
+
+/* === ACCOUNT INFO === */
+
+.account {
+  height: 32px;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-unit);
+  margin: 0 calc(var(--margin-unit) * 10);
+  cursor: pointer;
+  gap: var(--margin-unit);
+}
+.account:hover .name {
+  text-decoration: underline;
+}
+
+.account .name {
+  font-size: var(--global-font-size);
+  text-align: center;
+  border-radius: 2px;
+}
+
+.account .dp {
+  border-radius: 50%;
+}
+
+.account .settings {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  top: 32px;
+  width: 100%;
+  align-items: center;
+  background-color: white;
+  visibility: hidden;
+}
+
+.account:focus .settings {
+  visibility: visible;
+}
+
+.account .settings > * {
+  width: 100%;
+  text-align: center;
+}
+
+.account .settings > *:hover {
+  background-color: #d3d3d3;
+}
