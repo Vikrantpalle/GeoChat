@@ -2,17 +2,18 @@
   position: relative;
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
 }
 
 .post {
   display: flex;
   flex-direction: column;
+  width: 40%;
+  max-width: 400px;
+  height: 100%;
   gap: var(--margin-unit);
   background-color: white;
-  border-radius: 1rem;
   padding: calc(var(--padding-unit) * 2);
 }
 
@@ -20,4 +21,101 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+/* === CHATBOX === */
+
+.chatbox {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  width: 1200px;
+  height: 100%;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 0px;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.chat .message {
+  color: white;
+  margin: var(--margin-unit);
+  font-size: calc(var(--global-font-size) * 0.8);
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-unit);
+  word-wrap: break-word;
+}
+
+.chat .message.other {
+  background-color: rgba(66, 63, 63, 0.616);
+  border-radius: 0 10px;
+}
+
+.chat .message.me {
+  border-radius: 10px 0;
+  align-self: flex-end;
+  background-color: rgba(9, 239, 185, 0.358);
+}
+
+.chat .message .author {
+  font-weight: 1000;
+  color: palevioletred;
+  margin-bottom: calc(var(--margin-unit) * 1);
+}
+
+.chat .message.other .author {
+}
+
+.chat .message.me .author {
+  text-align: end;
+}
+
+.chat .message .data {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: var(--global-font-size);
+}
+
+.chat .message.other .data {
+}
+
+.chat .message.me .data {
+  text-align: end;
+}
+
+.chat .message .time_sent {
+  font-size: small;
+  font-weight: 400;
+}
+
+.chat .message.other .time_sent {
+  text-align: end;
+}
+
+.chat .message.me .time_sent {
+}
+
+.chatbox .inputbox {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 40px;
+}
+
+.chatbox .inputbox .input {
+  width: 0px;
+  flex-grow: 1;
+  resize: none;
+  padding: var(--padding-unit);
+}
+
+.chatbox .inputbox .send {
+  background-color: aqua;
+  width: 50px;
 }

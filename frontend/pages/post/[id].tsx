@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchClient } from "../_client";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -16,10 +16,36 @@ type Post = {
   Author: string;
 };
 
+type Message = {
+  Author: string;
+  Data: string;
+  TimeSent: string;
+};
+
+type Cords = {
+  lat: string | null;
+  lon: string | null;
+};
+
 export default function ViewPost() {
   const [id, setId] = useState<string | null>(null);
   const [post, setPost] = useState<Post | null>(null);
   const router = useRouter();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [textArea, setTextArea] = useState<string>("");
+  const chatEnd = useRef<HTMLDivElement | null>(null);
+
+  const getMessages = () => {
+    request
+      .get(`messages?id=${id}`)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 200 && res.data !== "") {
+          setMessages(res.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     if (id === null) return;
@@ -36,11 +62,35 @@ export default function ViewPost() {
   }, [id]);
 
   useEffect(() => {
+    if (id === null) return;
+    getMessages();
+  }, [id]);
+
+  useEffect(() => {
     if (!router.isReady) return;
     const post_id = router.query["id"];
     if (post_id === undefined || typeof post_id !== "string") return;
     setId(post_id);
   }, [router.isReady]);
+
+  const sendMessage = () => {
+    request
+      .post(`messages?id=${id}`, textArea)
+      .then((res) => {
+        if (res.status == 200) {
+          getMessages();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    chatEnd.current?.scrollIntoView();
+  };
 
   return (
     <div className={styles.main}>
@@ -55,6 +105,43 @@ export default function ViewPost() {
         </div>
         <h1 className={styles.subject}>{post?.Subject}</h1>
         <p className={styles.description}>{post?.Description}</p>
+      </div>
+      <div className={styles.chatbox}>
+        <div className={styles.chat}>
+          {messages.map((message, idx) => (
+            <div
+              key={idx}
+              className={[
+                styles.message,
+                idx % 2 ? styles.me : styles.other,
+              ].join(" ")}
+            >
+              <p className={styles.author}>--{message.Author}</p>
+              <p className={styles.data}>{message.Data}</p>
+              <p className={styles.time_sent}>
+                {new Date(message.TimeSent).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </p>
+            </div>
+          ))}
+          <div ref={chatEnd}></div>
+        </div>
+        <div className={styles.inputbox}>
+          <textarea
+            cols={10}
+            wrap="soft"
+            maxLength={255}
+            placeholder="send message"
+            className={styles.input}
+            onChange={(e) => setTextArea(e.target.value)}
+          />
+          <button className={styles.send} onClick={sendMessage}>
+            send
+          </button>
+        </div>
       </div>
     </div>
   );

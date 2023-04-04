@@ -207,34 +207,10 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	cors(w)
 	switch r.Method {
 	case "GET":
-		lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
-		if err != nil {
-			fmt.Println("invalid latitude")
-			return
-		}
-		lon, err := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
-		if err != nil {
-			fmt.Println("invalid longitude")
-			return
-		}
+		// TODO: error handling
+		id := r.URL.Query().Get("id")
 
-		var room_id int
-		err = db.QueryRow(context.Background(), "select room_id from rooms where lat=$1 AND lon=$2", lat, lon).Scan(&room_id)
-		if err != nil {
-			if err == pgx.ErrNoRows {
-				log.Printf("room with lat=%f and lon=%f does not exist", lat, lon)
-				room_id, err = CreateRoom(lat, lon)
-				if err != nil {
-					log.Print("Could not create room")
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-			} else {
-				log.Fatal(err)
-			}
-		}
-
-		rows, _ := db.Query(context.Background(), "select name,message,created_at from messages join users on users.user_id = messages.author_id and messages.room_id = $1 order by created_at asc", room_id)
+		rows, _ := db.Query(context.Background(), "select name,message,created_at from (select * from messages where post_id=$1) p join users on users.user_id = p.author_id order by created_at asc", id)
 
 		message_list := make([]Message, 0)
 
@@ -259,16 +235,7 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(data)
 	case "POST":
-		lat, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
-		if err != nil {
-			fmt.Println("invalid latitude")
-			return
-		}
-		lon, err := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
-		if err != nil {
-			fmt.Println("invalid longitude")
-			return
-		}
+		id := r.URL.Query().Get("id")
 
 		data, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -301,17 +268,17 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 		}
-		var room_id int
-		err = db.QueryRow(context.Background(), "select room_id from rooms where lat=$1 AND lon=$2", lat, lon).Scan(&room_id)
+		var post_id int
+		err = db.QueryRow(context.Background(), "select post_id from posts where post_id = $1", id).Scan(&post_id)
 		if err != nil {
 			if err == pgx.ErrNoRows {
-				log.Printf("room with lat=%f and lon=%f does not exist", lat, lon)
+				log.Printf("post id=%s invalid", id)
 				return
 			} else {
 				log.Fatal(err)
 			}
 		}
-		_, err = db.Exec(context.Background(), "INSERT INTO messages(author_id,message,room_id) values ($1,$2,$3)", author_id, payload, room_id)
+		_, err = db.Exec(context.Background(), "INSERT INTO messages(author_id,message,post_id) values ($1,$2,$3)", author_id, payload, post_id)
 		if err != nil {
 			var pgErr *pgconn.PgError
 			if errors.As(err, &pgErr) {
