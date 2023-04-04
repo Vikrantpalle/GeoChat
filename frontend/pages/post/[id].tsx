@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import styles from "@/styles/ViewPost.module.css";
 
 const request = fetchClient();
+const MapWithNoSSR = dynamic(() => import("./_map"), { ssr: false });
 
 type Post = {
   Post_id: string;
@@ -21,11 +22,6 @@ type Message = {
   Author: string;
   Data: string;
   TimeSent: string;
-};
-
-type Cords = {
-  lat: string | null;
-  lon: string | null;
 };
 
 export default function ViewPost() {
@@ -106,6 +102,7 @@ export default function ViewPost() {
         </div>
         <h1 className={styles.subject}>{post?.Subject}</h1>
         <p className={styles.description}>{post?.Description}</p>
+        {post && <MapWithNoSSR center={[post.Lat, post.Lon]} />}
       </div>
       <div className={styles.chatbox}>
         <div className={styles.chat}>

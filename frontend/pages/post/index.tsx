@@ -5,7 +5,7 @@ import { LeafletMouseEvent } from "leaflet";
 import { fetchClient } from "../_client";
 
 export const onMapClickContext = createContext((_: LeafletMouseEvent) => {});
-const MapWithNoSSR = dynamic(() => import("./_map"), { ssr: false });
+const IMapWithNoSSR = dynamic(() => import("./_imap"), { ssr: false });
 const request = fetchClient();
 
 type FormData = {
@@ -70,7 +70,7 @@ export default function Post() {
         </button>
       </div>
       <onMapClickContext.Provider value={handleMapClick}>
-        <MapWithNoSSR />
+        <IMapWithNoSSR />
       </onMapClickContext.Provider>
     </div>
   );

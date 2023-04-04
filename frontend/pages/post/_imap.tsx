@@ -4,11 +4,26 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import { useContext, useEffect, useState } from "react";
 import { LatLng } from "leaflet";
 import "leaflet-defaulticon-compatibility";
+import { onMapClickContext } from ".";
 
-export default function Map({ center }) {
+function ClickEvent() {
+  const [position, setPosition] = useState<LatLng | null>(null);
+  const mapClick = useContext(onMapClickContext);
+
+  const map = useMapEvents({
+    click: (e) => {
+      // map.setView(e.latlng, 15);
+      mapClick(e);
+      setPosition(e.latlng);
+    },
+  });
+  return position === null ? null : <Marker position={position}></Marker>;
+}
+
+export default function IMap() {
   return (
     <MapContainer
-      center={center}
+      center={[51.505, -0.09]}
       zoom={13}
       scrollWheelZoom={false}
       style={{ height: "100%", width: "100%" }}
@@ -17,7 +32,7 @@ export default function Map({ center }) {
         attribution={`&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`}
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={center} />
+      <ClickEvent />
     </MapContainer>
   );
 }
