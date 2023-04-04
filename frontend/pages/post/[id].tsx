@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchClient } from "../_client";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "@/styles/ViewPost.module.css";
 
@@ -109,13 +110,7 @@ export default function ViewPost() {
       <div className={styles.chatbox}>
         <div className={styles.chat}>
           {messages.map((message, idx) => (
-            <div
-              key={idx}
-              className={[
-                styles.message,
-                idx % 2 ? styles.me : styles.other,
-              ].join(" ")}
-            >
+            <div key={idx} className={styles.message}>
               <p className={styles.author}>--{message.Author}</p>
               <p className={styles.data}>{message.Data}</p>
               <p className={styles.time_sent}>
@@ -139,7 +134,12 @@ export default function ViewPost() {
             onChange={(e) => setTextArea(e.target.value)}
           />
           <button className={styles.send} onClick={sendMessage}>
-            send
+            <Image
+              src={"/icons8-send-50.png"}
+              alt="send"
+              width={25}
+              height={25}
+            />
           </button>
         </div>
       </div>
