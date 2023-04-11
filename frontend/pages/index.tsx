@@ -3,6 +3,7 @@ import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { fetchClient } from "./_client";
 import Link from "next/link";
+import Image from "next/image";
 
 const request = fetchClient();
 
@@ -45,15 +46,23 @@ export default function Home() {
               key={idx}
               href={`post/${post.Post_id}`}
             >
+              <div className={styles.image}>
+                <Image
+                  src={"/rest-stock.jpg"}
+                  alt={post?.Subject}
+                  fill={true}
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <div className={styles.content}>
                 <h2 className={styles.subject}>{post.Subject}</h2>
                 <p className={styles.description}>{post.Description}</p>
-              </div>
-              <div className={styles.footer}>
-                <h4 className={styles.author}>{post.Author}</h4>
-                <h4 className={styles.created_at}>
-                  {new Date(post.Created_at).toLocaleDateString([])}
-                </h4>
+                <div className={styles.footer}>
+                  <h4 className={styles.author}>{post.Author}</h4>
+                  <h4 className={styles.created_at}>
+                    {new Date(post.Created_at).toLocaleDateString([])}
+                  </h4>
+                </div>
               </div>
             </Link>
           ))}
