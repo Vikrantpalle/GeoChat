@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { LatLng } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 
-export default function Map({ center }) {
+export default function Map({ center }: any) {
   return (
     <MapContainer
       center={center}
